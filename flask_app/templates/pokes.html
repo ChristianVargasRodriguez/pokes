@@ -1,0 +1,51 @@
+{% extends "base.html" %} 
+
+{% block title %} Pokes {% endblock%}
+
+{% block content %}
+<h3 class="font-weight-bold">Welcome {{user.name}} !</h3>
+<p> {{ poked_by_users|length }} people poked you!</p>
+<hr class="border border-black border-4" />
+<div class="border border-dark col-md-4 p-3">
+    {% for user_id, poker_user in poked_by_users.items() %}
+        <p>{{ poker_user.name }} poked you {{poker_user.times}} times </p>
+    {% endfor %}
+</div>
+<br>
+
+<div>
+    <p>People you may want to poke:</p>
+    <div>
+        <table class="table">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Alias</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Poke History</th>
+                    <th scope="col">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for user_id, user in poked_users.items() %}
+                {% if user.id != session.user_id %}
+                <tr>
+                    <td>{{user.name}}</th>
+                    <td>{{user.alias}}</td>
+                    <td>{{user.email}}</td>
+                    <td>{{user.times_poked|default(0, true)}}</td>
+                    <td>
+                        <form action="/poke_user/{{ user.id }}/">
+                            <button type="submit">Poke!</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endif %}
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+{% endblock %}
